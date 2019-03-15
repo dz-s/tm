@@ -61,7 +61,43 @@ func _init(c *cli.Context) error {
 	return nil
 }
 
-// func add(entity Entity) {
+func isClient() bool {
+	_, err := os.Stat(string(Client))
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
+func isProject() bool {
+	_, err := os.Stat(string(Project))
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
+func isTask() bool {
+	_, err := os.Stat(string(Task))
+	if err != nil {
+		return false
+	} else {
+		return true
+	}
+}
+
+// func createEntity() {
+
+// }
+
+// func add(c *cli.Context) {
+// 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+// 	if isClient() {
+// 		name := filepath.Join(dir, c.Args().Get(0))
+// 	} else {
+// 	}
 // }
 
 // func remove(entity Entity) {
