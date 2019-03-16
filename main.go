@@ -28,9 +28,8 @@ func _init(c *cli.Context) error {
 	}
 
 	client := filepath.Join(dir, c.Args().Get(0))
-	project := filepath.Join(client, c.Args().Get(1))
-	mode := os.FileMode(0700)
 
+	project := filepath.Join(client, c.Args().Get(1))
 	/**
 	+-----+---+--------------------------+
 	| rwx | 7 | Read, write and execute  |
@@ -52,10 +51,10 @@ func _init(c *cli.Context) error {
 	+------------+------+-------+
 	*/
 
-	os.Mkdir(client, os.FileMode(mode))
-	os.OpenFile(filepath.Join(client, string(Client)), os.O_RDONLY|os.O_CREATE, mode)
-	os.Mkdir(project, os.FileMode(mode))
-	os.OpenFile(filepath.Join(project, string(Project)), os.O_RDONLY|os.O_CREATE, mode)
+	os.Mkdir(client, MODE)
+	os.OpenFile(filepath.Join(client, string(Client)), os.O_RDONLY|os.O_CREATE, MODE)
+	os.Mkdir(project, MODE)
+	os.OpenFile(filepath.Join(project, string(Project)), os.O_RDONLY|os.O_CREATE, MODE)
 
 	fmt.Println("initialize has been done successfully")
 	return nil
@@ -88,20 +87,32 @@ func isTask() bool {
 	}
 }
 
-// func createEntity() {
+func createEntity(name string, _type Entity) error {
+	dir, err := os.Getwd()
+	if err != nil {
+		return errors.Wrap(err, "Couldn't get root dir path")
+	}
+	fmt.Println("create filepath", filepath.Join(name, dir))
+	os.Mkdir(filepath.Join(dir, name), MODE)
+	if _type == Task {
+		os.OpenFile(filepath.Join(name, dir), os.O_RDONLY|os.O_CREATE, MODE)
 
-// }
+	}
+	os.OpenFile(filepath.Join(dir, string(_type)), os.O_RDONLY, MODE) // add entity identifier
+	return nil
+}
 
-// func add(c *cli.Context) {
-// 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
-// 	if isClient() {
-// 		name := filepath.Join(dir, c.Args().Get(0))
-// 	} else {
-// 	}
-// }
-
-// func remove(entity Entity) {
-// }
+func add(c *cli.Context) {
+	name := c.Args().Get(0)
+	if isClient() {
+		fmt.Println("cool!")
+		createEntity(name, Client)
+	} else if isProject() {
+		createEntity(name, Client)
+	} else {
+		createEntity(name, Task)
+	}
+}
 
 func main() {
 
@@ -116,6 +127,11 @@ func main() {
 			Name:   "init",
 			Usage:  "Initial setup",
 			Action: _init,
+		},
+		{
+			Name:   "add",
+			Usage:  "Initial setup",
+			Action: add,
 		},
 	}
 
