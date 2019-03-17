@@ -92,23 +92,21 @@ func createEntity(name string, _type Entity) error {
 	if err != nil {
 		return errors.Wrap(err, "Couldn't get root dir path")
 	}
-	fmt.Println("create filepath", filepath.Join(name, dir))
 	os.Mkdir(filepath.Join(dir, name), MODE)
+	root := dir + "/" + name
 	if _type == Task {
-		os.OpenFile(filepath.Join(name, dir), os.O_RDONLY|os.O_CREATE, MODE)
-
+		os.OpenFile(filepath.Join(root, name), os.O_RDWR|os.O_CREATE, MODE)
 	}
-	os.OpenFile(filepath.Join(dir, string(_type)), os.O_RDONLY, MODE) // add entity identifier
+	os.OpenFile(filepath.Join(root, string(_type)), os.O_RDONLY|os.O_CREATE, MODE) // add entity identifier
 	return nil
 }
 
 func add(c *cli.Context) {
 	name := c.Args().Get(0)
 	if isClient() {
-		fmt.Println("cool!")
-		createEntity(name, Client)
+		createEntity(name, Project)
 	} else if isProject() {
-		createEntity(name, Client)
+		createEntity(name, Task)
 	} else {
 		createEntity(name, Task)
 	}
