@@ -64,27 +64,24 @@ func isClient() bool {
 	_, err := os.Stat(string(Client))
 	if err != nil {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func isProject() bool {
 	_, err := os.Stat(string(Project))
 	if err != nil {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func isTask() bool {
 	_, err := os.Stat(string(Task))
 	if err != nil {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
 func createEntity(name string, _type Entity) error {
@@ -130,6 +127,11 @@ func main() {
 			Name:   "add",
 			Usage:  "Initial setup",
 			Action: add,
+		},
+		{
+			Name:   "last",
+			Usage:  "Initial setup",
+			Action: getAuthor,
 		},
 	}
 
