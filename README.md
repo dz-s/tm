@@ -29,6 +29,9 @@ who:
 * feel tired of various GUI tools while loving their text editors  
 
 ---
+## Getting started
+
+---
 ## How to install
 
 ```
