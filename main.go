@@ -12,6 +12,9 @@ import (
 
 type Entity string
 
+var tok string
+var proj string
+
 const (
 	Client  Entity = ".client"
 	Project Entity = ".project"
@@ -109,13 +112,31 @@ func add(c *cli.Context) {
 	}
 }
 
+func _import(c *cli.Context) {
+	fmt.Println(&tok)
+	fmt.Println(importProject(tok, proj))
+}
+
 func main() {
 
 	app := cli.NewApp()
 
 	app.Name = "tm"
 	app.Usage = "Minimalistic task management"
-
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "tok",
+			Value:       "key",
+			Usage:       "access token for board API",
+			Destination: &tok,
+		},
+		cli.StringFlag{
+			Name:        "proj",
+			Value:       "foobar",
+			Usage:       "project name",
+			Destination: &proj,
+		},
+	}
 	// we create our commands
 	app.Commands = []cli.Command{
 		{
@@ -132,6 +153,11 @@ func main() {
 			Name:   "last",
 			Usage:  "Initial setup",
 			Action: getAuthor,
+		},
+		{
+			Name:   "import",
+			Usage:  "Import your project from board",
+			Action: _import,
 		},
 	}
 
