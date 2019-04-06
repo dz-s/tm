@@ -10,16 +10,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-type Entity string
-
-var tok string
-var proj string
-
-const (
-	Client  Entity = ".client"
-	Project Entity = ".project"
-	Task    Entity = ".task"
-)
+var key, tok, proj string
 
 /*_init ...
 Initialize client and project directives
@@ -63,44 +54,6 @@ func _init(c *cli.Context) error {
 	return nil
 }
 
-func isClient() bool {
-	_, err := os.Stat(string(Client))
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func isProject() bool {
-	_, err := os.Stat(string(Project))
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func isTask() bool {
-	_, err := os.Stat(string(Task))
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func createEntity(name string, _type Entity) error {
-	dir, err := os.Getwd()
-	if err != nil {
-		return errors.Wrap(err, "Couldn't get root dir path")
-	}
-	os.Mkdir(filepath.Join(dir, name), MODE)
-	root := dir + "/" + name
-	if _type == Task {
-		os.OpenFile(filepath.Join(root, name), os.O_RDWR|os.O_CREATE, MODE)
-	}
-	os.OpenFile(filepath.Join(root, string(_type)), os.O_RDONLY|os.O_CREATE, MODE) // add entity identifier
-	return nil
-}
-
 func add(c *cli.Context) {
 	name := c.Args().Get(0)
 	if isClient() {
@@ -113,8 +66,9 @@ func add(c *cli.Context) {
 }
 
 func _import(c *cli.Context) {
-	fmt.Println(&tok)
-	fmt.Println(importProject(tok, proj))
+	fmt.Println(key, tok, proj)
+	key, token := importProject("trello_Key", "trello_Token", "testProject")
+	fmt.Println(getCredentials(key, tok))
 }
 
 func main() {
@@ -123,20 +77,6 @@ func main() {
 
 	app.Name = "tm"
 	app.Usage = "Minimalistic task management"
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:        "tok",
-			Value:       "key",
-			Usage:       "access token for board API",
-			Destination: &tok,
-		},
-		cli.StringFlag{
-			Name:        "proj",
-			Value:       "foobar",
-			Usage:       "project name",
-			Destination: &proj,
-		},
-	}
 	// we create our commands
 	app.Commands = []cli.Command{
 		{
@@ -158,6 +98,26 @@ func main() {
 			Name:   "import",
 			Usage:  "Import your project from board",
 			Action: _import,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "key",
+					Value:       "key",
+					Usage:       "access key for board API",
+					Destination: &key,
+				},
+				cli.StringFlag{
+					Name:        "tok",
+					Value:       "tok",
+					Usage:       "access token for board API",
+					Destination: &tok,
+				},
+				cli.StringFlag{
+					Name:        "proj",
+					Value:       "foobar",
+					Usage:       "project name",
+					Destination: &proj,
+				},
+			},
 		},
 	}
 
