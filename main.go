@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
-
+	//"text/template"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
+	"log"
 )
 
 var key, tok, proj string
@@ -66,15 +66,16 @@ func add(c *cli.Context) {
 }
 
 func _import(c *cli.Context) {
-	fmt.Println(key, tok, proj)
-	key, token := importProject("trello_Key", "trello_Token", "testProject")
-	fmt.Println(getCredentials(key, tok))
+	// fmt.Println(key, tok, proj)
+	// key, token := getMetadata("trello_Key", "trello_Token", "testProject")
+	// fmt.Println(getCredentials(key, tok))
 }
 
 func main() {
-
+	//_, templates := template.ParseFiles("Task.md")
 	app := cli.NewApp()
-
+	// fmt.Println("!!!!!", templates)
+	//jira.JiraTest();
 	app.Name = "tm"
 	app.Usage = "Minimalistic task management"
 	// we create our commands
@@ -86,12 +87,12 @@ func main() {
 		},
 		{
 			Name:   "add",
-			Usage:  "Initial setup",
+			Usage:  "Add entity",
 			Action: add,
 		},
 		{
 			Name:   "last",
-			Usage:  "Initial setup",
+			Usage:  "Get last change",
 			Action: getAuthor,
 		},
 		{

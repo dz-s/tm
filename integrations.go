@@ -33,7 +33,7 @@ func getCredentials(key string, token string) (string, string) { //Might be turn
 	return m[key], m[token]
 }
 
-func getMetadata(keyName string, tokenName string) (string, string) {
+func getMetadata(keyName string, tokenName string, baseURL string) {
 
 	key, token := getCredentials(keyName, tokenName)
 	res, err := http.Get(
