@@ -3,16 +3,15 @@ package main
 import (
 	"os"
 	"path/filepath"
-
+	
 	"github.com/pkg/errors"
 )
 
 func isClient() bool {
 	_, err := os.Stat(string(Client))
-	if err != nil {
-		return false
-	}
-	return true
+
+	return (err == nil)
+
 }
 
 func isProject() bool {
