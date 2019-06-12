@@ -1,24 +1,31 @@
 package main
 
 import (
+	"fmt"
+	"bytes"
 	"os"
 	"path/filepath"
-	"os/exec"
-	"time"
 	"text/template"
+	"time"
+
 	"github.com/pkg/errors"
 )
 
-func createTemplate (title string) {
-	lastLog := getLogStruct();
+func excecuteTemplate(title string) string {
+	lastLog := getLogStruct()
 
 	lastLog.CreatedDate = time.Now().String()
 	lastLog.Title = title
-
+	var tpl bytes.Buffer
 	tmpl, err := template.ParseFiles(rootDir + "/Task.md")
-	if err != nil { panic(err) }
-	err = tmpl.Execute(os.Stdout, lastLog)
-	if err != nil { panic(err) }
+	if err != nil {
+		panic(err)
+	}
+	err = tmpl.Execute(&tpl, lastLog)
+	if err != nil {
+		panic(err)
+	}
+	return tpl.String()
 }
 
 func isClient() bool {
@@ -50,12 +57,11 @@ func createEntity(name string, _type Entity) error {
 	os.Mkdir(filepath.Join(dir, name), MODE)
 	root := dir + "/" + name
 	if _type == Task {
-		
-		f, err := os.OpenFile(filepath.Join(root, name), os.O_RDWR|os.O_CREATE, MODE)
-		createTemplate(name)
-		out, err := exec.Command("ls","lh").Output()
-		template := string(out)
-		_, err = f.WriteString(template)
+
+		f, err := os.OpenFile(filepath.Join(root, name + ".md"), os.O_RDWR|os.O_CREATE, MODE)
+		out := excecuteTemplate(name)
+		fmt.Println(out)
+		_, err = f.WriteString(out)
 		f.Sync()
 		if err != nil {
 			return err
