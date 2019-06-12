@@ -1,2 +1,2 @@
-tm testClient testProject
+./tm init testClient testProject
 #TBD

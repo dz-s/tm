@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	//"text/template"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
+	"github.com/gosimple/slug"
 	"log"
 )
 
 var key, tok, proj string
+var title string
+var rootDir string
 
 /*_init ...
 Initialize client and project directives
@@ -55,7 +57,9 @@ func _init(c *cli.Context) error {
 }
 
 func add(c *cli.Context) {
-	name := c.Args().Get(0)
+
+	name := slug.Make(title)
+
 	if isClient() {
 		createEntity(name, Project)
 	} else if isProject() {
@@ -72,10 +76,11 @@ func _import(c *cli.Context) {
 }
 
 func main() {
+
+	rootDir = "~/tm"
+	fmt.Println(rootDir)
 	//_, templates := template.ParseFiles("Task.md")
 	app := cli.NewApp()
-	// fmt.Println("!!!!!", templates)
-	//jira.JiraTest();
 	app.Name = "tm"
 	app.Usage = "Minimalistic task management"
 	// we create our commands
@@ -89,6 +94,14 @@ func main() {
 			Name:   "add",
 			Usage:  "Add entity",
 			Action: add,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "t",
+					Value:       "title",
+					Usage:       "title for Task.md template",
+					Destination: &title,
+				},
+			},
 		},
 		{
 			Name:   "last",

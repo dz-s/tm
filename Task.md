@@ -4,14 +4,10 @@
 
 ---
 
-## {{.Status}}
-
-**{{.Build}}**
-
 ```
 commit {{.Commit}}
 Author: {{.Author}}
 Date:   {{.CreatedDate}}
 
-{{.Desc}}
+
 ```
