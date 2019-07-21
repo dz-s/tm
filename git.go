@@ -4,17 +4,19 @@ import (
 	"bytes"
 	"encoding/json"
 	"log"
+
+	//"fmt"
 	"os/exec"
 
 	"github.com/urfave/cli"
 )
 
 type GitLogItem struct {
-	Commit     string `json:"commit"`
-	Author     string `json:"author"`
-	Date	string `json:"date"`
-	CreatedDate	string 
-	Title	string 
+	Commit      string `json:"commit"`
+	Author      string `json:"author"`
+	Date        string `json:"date"`
+	CreatedDate string
+	Title       string
 }
 
 func getLastCommit() string {
@@ -34,7 +36,7 @@ func getAuthor(c *cli.Context) error {
 }
 
 func getLogStruct() GitLogItem {
-	cmd := exec.Command("/bin/sh", rootDir + "/parseGitLog.sh")
+	cmd := exec.Command("/bin/sh", rootDir+"/parseGitLog.sh")
 	res, err := cmd.Output()
 	var lastLog GitLogItem
 	err = json.Unmarshal([]byte(res), &lastLog)
